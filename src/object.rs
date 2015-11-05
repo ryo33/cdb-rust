@@ -95,7 +95,7 @@ impl Object {
                 ball.transform_r(rand::thread_rng().gen_range(ball::DEFAULT_R - ball::R_RANGE / 2.0, ball::DEFAULT_R + ball::R_RANGE / 2.0));
             },
             Sort::BAR_LENGTH => {
-                bar.length = rand::thread_rng().gen_range(player::DEFAULT_LENGTH - player::LENGTH_RANGE / 2.0, player::DEFAULT_LENGTH + player::LENGTH_RANGE / 2.0);
+                bar.transform_length(rand::thread_rng().gen_range(player::DEFAULT_LENGTH - player::LENGTH_RANGE / 2.0, player::DEFAULT_LENGTH + player::LENGTH_RANGE / 2.0));
             },
             Sort::WARP => {
                 ball.pos = self.pos;
