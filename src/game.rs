@@ -10,16 +10,20 @@ use player::{ self, Player };
 use ball::{ self, Ball };
 use object::{ Object, Sort };
 use rand::{ self, Rng };
+use locus_ball::LocusBall;
 
 const OBJECT_FREQUECY: i32 = 100;
+const LOCUS_FREQUENCY: i32 = 4;
 
 pub struct Game {
     input_state: InputState,
     context: Context,
     bar: Player,
     ball: Ball,
+    loci: Vec<LocusBall>,
     objects: Vec<Object>,
     state: State,
+    count: i32,
 }
 
 impl Game {
@@ -30,8 +34,10 @@ impl Game {
             context: con.clone(),
             bar: Player::new(con.clone()),
             ball: Ball::new(con.clone()),
+            loci: Vec::new(),
             objects: Vec::new(),
             state: State::TITLE,
+            count: 0,
         }
     }
 
@@ -40,6 +46,7 @@ impl Game {
         self.bar = Player::new(self.context.clone());
         self.ball = Ball::new(self.context.clone());
         self.objects = Vec::new();
+        self.loci = Vec::new();
         self.state = State::TITLE;
     }
 
@@ -48,10 +55,15 @@ impl Game {
         for o in self.objects.iter() {
             o.draw(t, g);
         }
+        for l in self.loci.iter() {
+            l.draw(t, g);
+        }
         self.ball.draw(t, g);
     }
 
     pub fn update(&mut self) {
+        self.count += 1;
+
         for op in self.input_state.vec().iter() {
             self.bar.press(op);
         }
@@ -62,8 +74,13 @@ impl Game {
             }
             o.update();
         }
-
         self.objects.retain(|o| o.is_retained());
+
+        for l in self.loci.iter_mut() {
+            l.update();
+        }
+        self.loci.retain(|l| l.is_retained());
+
         self.bar.update(&self.context);
         self.ball.update(&self.context, &self.bar);
 
@@ -89,6 +106,11 @@ impl Game {
                 _ => panic!(),
             };
             self.objects.push(Object::new(pos, rng.gen_range(ball::DEFAULT_R - ball::R_RANGE / 2.0, ball::DEFAULT_R + ball::R_RANGE / 2.0), sort));
+        }
+
+        // Add locus
+        if self.count % LOCUS_FREQUENCY == 0 {
+            self.loci.push(self.ball.get_locus_ball());
         }
     }
 

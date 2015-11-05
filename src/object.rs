@@ -5,7 +5,7 @@ use player;
 use ball;
 use rand::{ self, Rng };
 
-const OPACITY: f32 = 0.8;
+const OPACITY: f32 = 0.7;
 const DISAPPEAR_COUNT: i32 = 30;
 
 pub struct Object {

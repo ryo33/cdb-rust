@@ -17,6 +17,7 @@ mod operation;
 mod figure;
 mod player;
 mod ball;
+mod locus_ball;
 mod object;
 
 fn main() {

@@ -3,6 +3,7 @@ use gfx_graphics::{ GfxGraphics };
 use gfx_device_gl::{ Resources, CommandBuffer, Output };
 use num;
 use player;
+use locus_ball::LocusBall;
 
 use game::Context;
 
@@ -13,6 +14,7 @@ pub const R_RANGE: Scalar = 30.0;
 const DEFAULT_Y: Scalar = 0.05;
 const BIAS: Scalar = 30.0;
 const R_TRANS_STEP: i32 = 200;
+const RAINBOW_CYCLE: i32 = 100;
 
 pub struct Ball {
     pub pos: [Scalar; 2],
@@ -21,6 +23,8 @@ pub struct Ball {
     pub r_trans: Scalar,
     pub r_trans_step: i32,
     end: bool,
+    color: [f32; 4],
+    count: i32,
 }
 
 impl Ball {
@@ -32,7 +36,13 @@ impl Ball {
             r_trans: 0.0,
             r_trans_step: 0,
             end: false,
+            color: [1.0, 0.0, 0.0, 1.0],
+            count: 0,
         }
+    }
+
+    pub fn get_locus_ball(&self) -> LocusBall {
+        LocusBall::new(self.pos, self.r, self.color)
     }
 
     pub fn is_ended(&self) -> bool {
@@ -52,7 +62,9 @@ impl Ball {
     }
 
     pub fn update(&mut self, con: &Context, bar: &player::Player) -> &mut Self {
+        self.count += 1;
         self.transform();
+
         self.pos = [self.pos[0] + self.vec[0], self.pos[1] + self.vec[1]];
         if self.pos[0] - self.r < 0.0 {
             self.pos[0] = self.r;
@@ -80,11 +92,22 @@ impl Ball {
                 }
             }
         }
+        // rainbow
+        let x = ((self.count - self.count / RAINBOW_CYCLE * RAINBOW_CYCLE) as f32 / RAINBOW_CYCLE as f32);
+        self.color = match self.count / RAINBOW_CYCLE % 6 {
+            0 => [1.0    , x      , 0.0    , 1.0],
+            1 => [1.0 - x,     1.0, 0.0    , 1.0],
+            2 => [0.0    ,     1.0, x      , 1.0],
+            3 => [0.0    , 1.0 - x,     1.0, 1.0],
+            4 => [x      , 0.0    ,     1.0, 1.0],
+            5 => [    1.0, 0.0    , 1.0 - x, 1.0],
+            _ => [1., 1., 1., 1.],
+        };
         self
     }
 
     pub fn draw(&self, t: Matrix2d, g: &mut GfxGraphics<Resources, CommandBuffer<Resources>, Output>) {
         use figure;
-        figure::circle(self.pos[0], self.pos[1], self.r, [1.0, 1.0, 1.0, 1.0], t, g);
+        figure::circle(self.pos[0], self.pos[1], self.r, self.color, t, g);
     }
 }
