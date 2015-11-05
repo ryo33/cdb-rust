@@ -12,11 +12,14 @@ pub const DEFAULT_R: Scalar = 25.0;
 pub const R_RANGE: Scalar = 30.0;
 const DEFAULT_Y: Scalar = 0.05;
 const BIAS: Scalar = 30.0;
+const R_TRANS_STEP: i32 = 200;
 
 pub struct Ball {
     pub pos: [Scalar; 2],
     pub vec: [Scalar; 2],
     pub r: Scalar,
+    pub r_trans: Scalar,
+    pub r_trans_step: i32,
     end: bool,
 }
 
@@ -26,6 +29,8 @@ impl Ball {
             pos: [con.width as Scalar / 2.0, con.height as Scalar * DEFAULT_Y],
             vec: DEFAULT_VEC,
             r: DEFAULT_R,
+            r_trans: 0.0,
+            r_trans_step: 0,
             end: false,
         }
     }
@@ -34,7 +39,20 @@ impl Ball {
         self.end
     }
 
+    fn transform(&mut self) {
+        if self.r_trans_step != 0 {
+            self.r_trans_step -= 1;
+            self.r += (self.r_trans - self.r) / R_TRANS_STEP as Scalar;
+        }
+    }
+
+    pub fn transform_r(&mut self, trans: Scalar) {
+        self.r_trans_step = R_TRANS_STEP;
+        self.r_trans = trans;
+    }
+
     pub fn update(&mut self, con: &Context, bar: &player::Player) -> &mut Self {
+        self.transform();
         self.pos = [self.pos[0] + self.vec[0], self.pos[1] + self.vec[1]];
         if self.pos[0] - self.r < 0.0 {
             self.pos[0] = self.r;

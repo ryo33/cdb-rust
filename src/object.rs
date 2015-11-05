@@ -92,7 +92,7 @@ impl Object {
                 ball.vec[0] *= -1.0;
             },
             Sort::BALL_SIZE => {
-                ball.r = rand::thread_rng().gen_range(ball::DEFAULT_R - ball::R_RANGE / 2.0, ball::DEFAULT_R + ball::R_RANGE / 2.0);
+                ball.transform_r(rand::thread_rng().gen_range(ball::DEFAULT_R - ball::R_RANGE / 2.0, ball::DEFAULT_R + ball::R_RANGE / 2.0));
             },
             Sort::BAR_LENGTH => {
                 bar.length = rand::thread_rng().gen_range(player::DEFAULT_LENGTH - player::LENGTH_RANGE / 2.0, player::DEFAULT_LENGTH + player::LENGTH_RANGE / 2.0);
