@@ -13,7 +13,7 @@ pub const DEFAULT_R: Scalar = 25.0;
 pub const R_RANGE: Scalar = 30.0;
 const DEFAULT_Y: Scalar = 0.05;
 const BIAS: Scalar = 30.0;
-const R_TRANS_STEP: i32 = 200;
+const R_TRANS_STEP: i32 = 80;
 const RAINBOW_CYCLE: i32 = 100;
 
 pub struct Ball {

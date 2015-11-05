@@ -8,13 +8,13 @@ use game::Context;
 pub const DEFAULT_LENGTH: Scalar = 150.0;
 pub const LENGTH_RANGE: Scalar = 200.0;
 const LENGTH_TRANS_STEP: i32 = 200;
-pub const DEFAULT_Y: Scalar = 0.9;
+pub const DEFAULT_Y: Scalar = 0.95;
 const MAX_Y: Scalar = 0.9;
 const MIN_Y: Scalar = 0.5;
 const MOVE: Scalar = 0.4;
 const FRICTION: Scalar = 0.95;
 pub const HEIGHT: Scalar = 10.0;
-const COLOR: [f32; 4] = [0.3, 0.3, 0.3, 1.0];
+const COLOR: [f32; 4] = [0.8, 0.8, 0.9, 0.8];
 
 pub struct Player {
     pub pos: [Scalar; 2],

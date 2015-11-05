@@ -31,7 +31,7 @@ impl Object {
     pub fn draw(&self, t: Matrix2d, g: &mut GfxGraphics<Resources, CommandBuffer<Resources>, Output>) {
         use figure;
         let mut color = self.color();
-        color[3] -= 1.0 / DISAPPEAR_COUNT as f32 * self.dc as f32;
+        color[3] -= OPACITY * 1.0 / DISAPPEAR_COUNT as f32 * self.dc as f32;
         figure::circle(self.pos[0], self.pos[1], self.r, color, t, g);
     }
 

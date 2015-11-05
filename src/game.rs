@@ -93,7 +93,7 @@ impl Game {
         let mut rng = rand::thread_rng();
         if rng.gen_range(0, OBJECT_FREQUECY) == 0 {
             // TODO Regenerate if it already hits to ball
-            let pos = [rng.gen_range(0.0, self.context.width as Scalar) as f64, rng.gen_range(0.0, self.context.height as Scalar - player::DEFAULT_Y)];
+            let pos = [rng.gen_range(0.0, self.context.width as Scalar) as f64, rng.gen_range(0.0, self.context.height as Scalar * player::DEFAULT_Y - ball::DEFAULT_R)];
             let sort = match rng.gen_range(0, 8) {
                 0 => Sort::Fall,
                 1 => Sort::Reflect,
