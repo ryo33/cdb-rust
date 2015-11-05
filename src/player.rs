@@ -5,19 +5,20 @@ use gfx_device_gl::{ Resources, CommandBuffer, Output };
 use operation::Operation;
 use game::Context;
 
-const DEFAULT_Y: Scalar = 0.9;
+pub const DEFAULT_LENGTH: Scalar = 150.0;
+pub const LENGTH_RANGE: Scalar = 200.0;
+pub const DEFAULT_Y: Scalar = 0.9;
 const MAX_Y: Scalar = 0.9;
 const MIN_Y: Scalar = 0.5;
-const DEFAULT_LENGTH: Scalar = 150.0;
 const MOVE: Scalar = 0.4;
 const FRICTION: Scalar = 0.95;
-const HEIGHT: Scalar = 10.0;
+pub const HEIGHT: Scalar = 10.0;
 const COLOR: [f32; 4] = [0.3, 0.3, 0.3, 1.0];
 
 pub struct Player {
-    pos: [Scalar; 2],
-    vec: [Scalar; 2],
-    length: Scalar,
+    pub pos: [Scalar; 2],
+    pub vec: [Scalar; 2],
+    pub length: Scalar,
 }
 
 impl Player {

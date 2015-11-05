@@ -5,6 +5,7 @@ extern crate graphics;
 extern crate sprite;
 extern crate find_folder;
 extern crate num;
+extern crate rand;
 
 use game_loop::GameLoopSettings;
 use operation::InputManager;
@@ -16,6 +17,7 @@ mod operation;
 mod figure;
 mod player;
 mod ball;
+mod object;
 
 fn main() {
     let mut game_loop = GameLoopSettings::new()
