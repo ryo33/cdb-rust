@@ -6,7 +6,6 @@ use gfx_device_gl::{ Resources, CommandBuffer, Output };
 
 use operation::*;
 use input_state::InputState;
-use figure;
 use player::{ self, Player };
 use ball::{ self, Ball };
 use object::{ Object, Sort };
@@ -79,14 +78,14 @@ impl Game {
             // TODO Regenerate if it already hits to ball
             let pos = [rng.gen_range(0.0, self.context.width as Scalar) as f64, rng.gen_range(0.0, self.context.height as Scalar - player::DEFAULT_Y)];
             let sort = match rng.gen_range(0, 8) {
-                0 => Sort::FALL,
-                1 => Sort::REFLECT,
-                2 => Sort::REFLECT_V,
-                3 => Sort::REFLECT_H,
-                4 => Sort::BALL_SIZE,
-                5 => Sort::BAR_LENGTH,
-                6 => Sort::WARP,
-                7 => Sort::ACCELERATOR,
+                0 => Sort::Fall,
+                1 => Sort::Reflect,
+                2 => Sort::ReflectV,
+                3 => Sort::ReflectH,
+                4 => Sort::BallSize,
+                5 => Sort::BarLength,
+                6 => Sort::Warp,
+                7 => Sort::Accelerator,
                 _ => panic!(),
             };
             self.objects.push(Object::new(pos, rng.gen_range(ball::DEFAULT_R - ball::R_RANGE / 2.0, ball::DEFAULT_R + ball::R_RANGE / 2.0), sort));
