@@ -1,9 +1,10 @@
 use graphics::math::{ Scalar, Matrix2d };
 use gfx_graphics::{ GfxGraphics };
 use gfx_device_gl::{ Resources, CommandBuffer, Output };
+use rand::{ self, Rng };
+
 use player;
 use ball;
-use rand::{ self, Rng };
 
 const OPACITY: f32 = 0.7;
 const DISAPPEAR_COUNT: i32 = 30;

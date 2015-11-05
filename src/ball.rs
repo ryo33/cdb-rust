@@ -93,7 +93,7 @@ impl Ball {
             }
         }
         // rainbow
-        let x = ((self.count - self.count / RAINBOW_CYCLE * RAINBOW_CYCLE) as f32 / RAINBOW_CYCLE as f32);
+        let x = (self.count - self.count / RAINBOW_CYCLE * RAINBOW_CYCLE) as f32 / RAINBOW_CYCLE as f32;
         self.color = match self.count / RAINBOW_CYCLE % 6 {
             0 => [1.0    , x      , 0.0    , 1.0],
             1 => [1.0 - x,     1.0, 0.0    , 1.0],

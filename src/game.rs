@@ -3,13 +3,13 @@ use graphics::Transformed;
 use graphics::math::{ Scalar, Matrix2d };
 use gfx_graphics::{ GfxGraphics };
 use gfx_device_gl::{ Resources, CommandBuffer, Output };
+use rand::{ self, Rng };
 
 use operation::*;
 use input_state::InputState;
 use player::{ self, Player };
 use ball::{ self, Ball };
 use object::{ Object, Sort };
-use rand::{ self, Rng };
 use locus_ball::LocusBall;
 
 const OBJECT_FREQUECY: i32 = 100;
