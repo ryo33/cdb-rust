@@ -1,7 +1,7 @@
 use piston_window::*;
 
 use operation::InputManager;
-use game::Game;
+use game_state::GameState;
 
 pub struct GameLoop {
     width: u32,
@@ -29,7 +29,7 @@ impl GameLoop {
 
     pub fn run(&mut self, input_manager: &InputManager) {
         // self.window.set_capture_cursor(true);
-        let mut game = Game::new(self.width, self.height);
+        let mut game_state = GameState::new(self.width, self.height);
         for e in self.window.clone() {
             e.draw_2d(|c, g| {
                 clear(self.color, g);
@@ -42,16 +42,16 @@ impl GameLoop {
                 } else {
                     con = c.trans((size.width as f64 - self.width as f64 * height_ratio) / 2.0, 0.0).scale(height_ratio, height_ratio)
                 }
-                game.draw(con.transform, g);
+                game_state.draw(con.transform, g);
             });
             e.update(|_args| {
-                game.update();
+                game_state.update();
             });
             e.press(|button| {
-                game.press(input_manager.get_operation(button));
+                game_state.press(input_manager.get_operation(button));
             });
             e.release(|button| {
-                game.release(input_manager.get_operation(button));
+                game_state.release(input_manager.get_operation(button));
             });
         }
     }

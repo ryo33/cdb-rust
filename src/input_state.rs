@@ -7,12 +7,15 @@ pub struct InputState {
     pub right: bool,
     pub up: bool,
     pub down: bool,
+    pub enter: bool,
+    pub cancel: bool,
 }
 
 impl InputState {
     pub fn new() -> InputState {
         InputState {
             left: false, right: false, up: false, down: false,
+            enter: false, cancel: false,
         }
     }
 
@@ -32,6 +35,8 @@ impl InputState {
                 Direction::Up => self.up = value,
                 Direction::Down => self.down = value,
             },
+            Operation::Enter => self.enter = value,
+            Operation::Cancel => self.cancel = value,
             _ => {}
         }
         self
@@ -43,6 +48,8 @@ impl InputState {
         if self.right { states.push(Operation::Move(Direction::Right)); }
         if self.up { states.push(Operation::Move(Direction::Up)); }
         if self.down { states.push(Operation::Move(Direction::Down)); }
+        if self.enter { states.push(Operation::Enter); }
+        if self.cancel { states.push(Operation::Cancel); }
         states
     }
 }

@@ -11,6 +11,7 @@ use game_loop::GameLoopSettings;
 use operation::InputManager;
 
 mod game_loop;
+mod game_state;
 mod game;
 mod input_state;
 mod operation;

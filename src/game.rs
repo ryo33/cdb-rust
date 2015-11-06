@@ -16,13 +16,11 @@ const OBJECT_FREQUECY: i32 = 100;
 const LOCUS_FREQUENCY: i32 = 4;
 
 pub struct Game {
-    input_state: InputState,
     context: Context,
     bar: Player,
     ball: Ball,
     loci: Vec<LocusBall>,
     objects: Vec<Object>,
-    state: State,
     count: i32,
 }
 
@@ -30,24 +28,17 @@ impl Game {
     pub fn new(width: u32, height: u32) -> Self {
         let mut con = Context::new(width, height);
         Game {
-            input_state: InputState::new(),
             context: con.clone(),
             bar: Player::new(con.clone()),
             ball: Ball::new(con.clone()),
             loci: Vec::new(),
             objects: Vec::new(),
-            state: State::TITLE,
             count: 0,
         }
     }
 
-    fn init(&mut self) {
-        self.input_state = InputState::new();
-        self.bar = Player::new(self.context.clone());
-        self.ball = Ball::new(self.context.clone());
-        self.objects = Vec::new();
-        self.loci = Vec::new();
-        self.state = State::TITLE;
+    pub fn initialize(&self) -> Self {
+        Self::new(self.context.width, self.context.height)
     }
 
     pub fn draw(&self, t: Matrix2d, g: &mut GfxGraphics<Resources, CommandBuffer<Resources>, Output>) {
@@ -61,10 +52,10 @@ impl Game {
         self.ball.draw(t, g);
     }
 
-    pub fn update(&mut self) {
+    pub fn update(&mut self, input_state: &InputState) {
         self.count += 1;
 
-        for op in self.input_state.vec().iter() {
+        for op in input_state.vec().iter() {
             self.bar.press(op);
         }
 
@@ -83,11 +74,6 @@ impl Game {
 
         self.bar.update(&self.context);
         self.ball.update(&self.context, &self.bar);
-
-        // Check game ending
-        if self.ball.is_ended() {
-            self.state = State::RESULT;
-        }
 
         // Add objects
         let mut rng = rand::thread_rng();
@@ -114,12 +100,8 @@ impl Game {
         }
     }
 
-    pub fn press(&mut self, op: Operation) {
-        self.input_state.press(op);
-    }
-
-    pub fn release(&mut self, op: Operation) {
-        self.input_state.release(op);
+    pub fn is_ended(&self) -> bool {
+        self.ball.is_ended()
     }
 }
 
@@ -140,10 +122,4 @@ impl Context {
     pub fn trans(&self, t: Matrix2d) -> Matrix2d {
         t.trans((self.width / 2) as Scalar, (self.height / 2) as Scalar)
     }
-}
-
-pub enum State {
-    TITLE,
-    GAME,
-    RESULT,
 }

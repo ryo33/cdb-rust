@@ -22,6 +22,10 @@ impl InputManager {
                 Key::S => {
                     Operation::Move(Direction::Down)
                 },
+                Key::Space | Key::Return | Key::Z => {
+                    Operation::Enter
+                },
+                Key::X | Key::Backspace => Operation::Cancel,
                 _ => {Operation::None},
             },
             _ => {Operation::None},
@@ -35,5 +39,7 @@ pub enum Direction {
 
 pub enum Operation {
     Move(Direction),
+    Enter,
+    Cancel,
     None,
 }
