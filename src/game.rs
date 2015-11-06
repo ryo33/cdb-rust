@@ -11,9 +11,11 @@ use player::{ self, Player };
 use ball::{ self, Ball };
 use object::{ Object, Sort };
 use locus_ball::LocusBall;
+use traits::Circle;
 
 const OBJECT_FREQUECY: i32 = 100;
 const LOCUS_FREQUENCY: i32 = 4;
+const MIN_DISTANCE: f64 = 50.0; // Minimal distance of ball and spawn position of object
 
 pub struct Game {
     context: Context,
@@ -60,7 +62,7 @@ impl Game {
         }
 
         for o in self.objects.iter_mut() {
-            if o.is_hit(&self.ball) {
+            if ! o.hit && o.is_hit(&self.ball) {
                 o.hit(&mut self.bar, &mut self.ball);
             }
             o.update();
@@ -79,7 +81,6 @@ impl Game {
         let mut rng = rand::thread_rng();
         if rng.gen_range(0, OBJECT_FREQUECY) == 0 {
             // TODO Regenerate if it already hits to ball
-            let pos = [rng.gen_range(0.0, self.context.width as Scalar) as f64, rng.gen_range(0.0, self.context.height as Scalar * player::DEFAULT_Y - ball::DEFAULT_R)];
             let sort = match rng.gen_range(0, 8) {
                 0 => Sort::Fall,
                 1 => Sort::Reflect,
@@ -91,7 +92,14 @@ impl Game {
                 7 => Sort::Accelerator,
                 _ => panic!(),
             };
-            self.objects.push(Object::new(pos, rng.gen_range(ball::DEFAULT_R - ball::R_RANGE / 2.0, ball::DEFAULT_R + ball::R_RANGE / 2.0), sort));
+            loop {
+                let pos = [rng.gen_range(0.0, self.context.width as Scalar) as f64, rng.gen_range(0.0, self.context.height as Scalar * player::DEFAULT_Y - ball::DEFAULT_R)];
+                let r = rng.gen_range(ball::DEFAULT_R - ball::R_RANGE / 2.0, ball::DEFAULT_R + ball::R_RANGE / 2.0);
+                if ! self.ball.is_hit(&(pos, r + MIN_DISTANCE)) {
+                    self.objects.push(Object::new(pos, r, sort));
+                    break;
+                }
+            }
         }
 
         // Add locus
@@ -102,6 +110,20 @@ impl Game {
 
     pub fn is_ended(&self) -> bool {
         self.ball.is_ended()
+    }
+}
+
+impl Circle for ([f64; 2], f64) {
+    fn get_x(&self) -> f64 {
+        self.0[0]
+    }
+
+    fn get_y(&self) -> f64 {
+        self.0[1]
+    }
+
+    fn get_r(&self) -> f64 {
+        self.1
     }
 }
 

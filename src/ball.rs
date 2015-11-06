@@ -6,6 +6,7 @@ use player;
 use locus_ball::LocusBall;
 
 use game::Context;
+use traits::Circle;
 
 pub const DEFAULT_VEC: [Scalar; 2] = [2.0, 2.0];
 pub const VEC_RANGE: Scalar = 0.8;
@@ -109,5 +110,19 @@ impl Ball {
     pub fn draw(&self, t: Matrix2d, g: &mut GfxGraphics<Resources, CommandBuffer<Resources>, Output>) {
         use figure;
         figure::circle(self.pos[0], self.pos[1], self.r, self.color, t, g);
+    }
+}
+
+impl Circle for Ball {
+    fn get_x(&self) -> f64 {
+        self.pos[0]
+    }
+
+    fn get_y(&self) -> f64 {
+        self.pos[1]
+    }
+
+    fn get_r(&self) -> f64 {
+        self.r
     }
 }

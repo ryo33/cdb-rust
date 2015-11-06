@@ -20,6 +20,7 @@ mod player;
 mod ball;
 mod locus_ball;
 mod object;
+mod traits;
 
 fn main() {
     let mut game_loop = GameLoopSettings::new()

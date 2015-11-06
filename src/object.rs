@@ -5,6 +5,7 @@ use rand::{ self, Rng };
 
 use player;
 use ball;
+use traits::Circle;
 
 const OPACITY: f32 = 0.7;
 const DISAPPEAR_COUNT: i32 = 30;
@@ -33,17 +34,6 @@ impl Object {
         let mut color = self.color();
         color[3] -= OPACITY * 1.0 / DISAPPEAR_COUNT as f32 * self.dc as f32;
         figure::circle(self.pos[0], self.pos[1], self.r, color, t, g);
-    }
-
-    pub fn is_hit(&self, ball: &ball::Ball) -> bool {
-        if self.hit {
-            false
-        } else {
-            let x = ball.pos[0] - self.pos[0];
-            let y = ball.pos[1] - self.pos[1];
-            let r = ball.r + self.r;
-            x * x + y * y <= r * r
-        }
     }
 
     pub fn update(&mut self) {
@@ -104,6 +94,20 @@ impl Object {
             },
         }
         self.hit = true;
+    }
+}
+
+impl Circle for Object {
+    fn get_x(&self) -> f64 {
+        self.pos[0]
+    }
+
+    fn get_y(&self) -> f64 {
+        self.pos[1]
+    }
+
+    fn get_r(&self) -> f64 {
+        self.r
     }
 }
 
