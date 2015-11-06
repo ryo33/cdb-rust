@@ -23,6 +23,13 @@ impl GameState {
         }
     }
 
+    pub fn is_title(&self) -> bool {
+        match self.state {
+            State::Title => true,
+            _ => false,
+        }
+    }
+
     pub fn draw(&self, t: Matrix2d, g: &mut GfxGraphics<Resources, CommandBuffer<Resources>, Output>) {
         match self.state {
             State::Title => {

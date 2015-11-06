@@ -1,7 +1,11 @@
 use piston_window::*;
+use find_folder;
 
 use operation::InputManager;
 use game_state::GameState;
+
+const TITLE_WIDTH: u32 = 800;
+const TITLE_HEIGHT: u32 = 600;
 
 pub struct GameLoop {
     width: u32,
@@ -30,10 +34,17 @@ impl GameLoop {
     }
 
     pub fn run(&mut self, input_manager: &InputManager) {
-        // self.window.set_capture_cursor(true);
+        let title = Texture::from_path(
+            &mut *self.window.factory.borrow_mut(),
+            &find_folder::Search::ParentsThenKids(3, 3)
+            .for_folder("assets").unwrap().join("title.png"),
+            Flip::None,
+            &TextureSettings::new()
+            ).unwrap();
         let mut game_state = GameState::new(self.width, self.height);
         for e in self.window.clone() {
             e.draw_2d(|c, g| {
+                use figure;
                 clear(self.background_color, g);
 
                 let size = e.size();
@@ -45,7 +56,13 @@ impl GameLoop {
                 } else {
                     con = c.trans((size.width as f64 - self.width as f64 * height_ratio) / 2.0, 0.0).scale(height_ratio, height_ratio)
                 }
-                game_state.draw(con.transform, g);
+                let t = con.transform;
+                figure::rect(0.0, 0.0, self.width as f64, self.height as f64, self.color, t, g);
+                if game_state.is_title() {
+                    image(&title, t.scale(self.width as f64 / TITLE_WIDTH as f64, self.height as f64 / TITLE_HEIGHT as f64), g);
+                } else {
+                    game_state.draw(t, g);
+                }
             });
             e.update(|_args| {
                 game_state.update();
