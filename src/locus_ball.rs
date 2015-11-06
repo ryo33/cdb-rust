@@ -2,8 +2,8 @@ use graphics::math::{ Scalar, Matrix2d };
 use gfx_graphics::{ GfxGraphics };
 use gfx_device_gl::{ Resources, CommandBuffer, Output };
 
-const REMAIN_TIME: i32 = 300;
-const MAX_OPACITY: f32 = 0.4;
+const REMAIN_TIME: i32 = 330;
+const MAX_OPACITY: f32 = 0.3;
 
 pub struct LocusBall {
     pos: [Scalar; 2],

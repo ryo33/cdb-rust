@@ -5,17 +5,17 @@ use gfx_graphics::{ GfxGraphics };
 use gfx_device_gl::{ Resources, CommandBuffer, Output };
 use rand::{ self, Rng };
 
-use operation::*;
 use input_state::InputState;
 use player::{ self, Player };
 use ball::{ self, Ball };
-use object::{ Object, Sort };
+use object::{ self, Object, Sort };
 use locus_ball::LocusBall;
 use traits::Circle;
 
-const OBJECT_FREQUECY: i32 = 100;
-const LOCUS_FREQUENCY: i32 = 4;
-const MIN_DISTANCE: f64 = 50.0; // Minimal distance of ball and spawn position of object
+const OBJECT_FREQUECY: i32 = 80;
+const LOCUS_FREQUENCY: i32 = 3;
+const MIN_DISTANCE: f64 = 150.0; // Minimal distance of ball and spawn position of object
+const OBJECT_RANDOM_LIMIT: i32 = 100;
 
 pub struct Game {
     context: Context,
@@ -81,7 +81,7 @@ impl Game {
         let mut rng = rand::thread_rng();
         if rng.gen_range(0, OBJECT_FREQUECY) == 0 {
             // TODO Regenerate if it already hits to ball
-            let sort = match rng.gen_range(0, 8) {
+            let sort = match rng.gen_range(0, 9) {
                 0 => Sort::Fall,
                 1 => Sort::Reflect,
                 2 => Sort::ReflectV,
@@ -90,11 +90,12 @@ impl Game {
                 5 => Sort::BarLength,
                 6 => Sort::Warp,
                 7 => Sort::Accelerator,
+                8 => Sort::Random,
                 _ => panic!(),
             };
-            loop {
+            let r = rng.gen_range(object::MIN_R, object::MAX_R);
+            for i in 0..OBJECT_RANDOM_LIMIT {
                 let pos = [rng.gen_range(0.0, self.context.width as Scalar) as f64, rng.gen_range(0.0, self.context.height as Scalar * player::DEFAULT_Y - ball::DEFAULT_R)];
-                let r = rng.gen_range(ball::DEFAULT_R - ball::R_RANGE / 2.0, ball::DEFAULT_R + ball::R_RANGE / 2.0);
                 if ! self.ball.is_hit(&(pos, r + MIN_DISTANCE)) {
                     self.objects.push(Object::new(pos, r, sort));
                     break;

@@ -7,6 +7,7 @@ pub struct GameLoop {
     width: u32,
     height: u32,
     window: PistonWindow,
+    background_color: [f32; 4],
     color: [f32; 4],
 }
 
@@ -23,6 +24,7 @@ impl GameLoop {
             width: s.width,
             height: s.height,
             window: window,
+            background_color: s.background_color,
             color: s.color,
         }
     }
@@ -32,7 +34,8 @@ impl GameLoop {
         let mut game_state = GameState::new(self.width, self.height);
         for e in self.window.clone() {
             e.draw_2d(|c, g| {
-                clear(self.color, g);
+                clear(self.background_color, g);
+
                 let size = e.size();
                 let width_ratio = size.width as f64 / self.width as f64;
                 let height_ratio = size.height as f64 / self.height as f64;
@@ -64,6 +67,7 @@ pub struct GameLoopSettings {
     window_height: u32,
     title: &'static str,
     color: [f32; 4],
+    background_color: [f32; 4],
 }
 
 #[allow(dead_code)]
@@ -76,6 +80,7 @@ impl GameLoopSettings {
             window_height: 540,
             title: "game",
             color: [1.0, 1.0, 1.0, 1.0],
+            background_color: [1.0, 1.0, 1.0, 1.0],
         }
     }
 
@@ -102,6 +107,11 @@ impl GameLoopSettings {
 
     pub fn color(&mut self, color: [f32; 4]) -> &mut Self {
         self.color = color;
+        self
+    }
+
+    pub fn background_color(&mut self, background_color: [f32; 4]) -> &mut Self {
+        self.background_color = background_color;
         self
     }
 

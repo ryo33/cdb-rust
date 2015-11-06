@@ -8,14 +8,15 @@ use locus_ball::LocusBall;
 use game::Context;
 use traits::Circle;
 
-pub const DEFAULT_VEC: [Scalar; 2] = [2.0, 2.0];
-pub const VEC_RANGE: Scalar = 0.8;
-pub const DEFAULT_R: Scalar = 25.0;
-pub const R_RANGE: Scalar = 30.0;
+pub const DEFAULT_VEC: [Scalar; 2] = [2.4, 2.4];
+pub const VEC_RANGE: Scalar = 1.0;
+pub const DEFAULT_R: Scalar = 28.0;
+pub const R_RANGE: Scalar = 40.0;
 const DEFAULT_Y: Scalar = 0.05;
 const BIAS: Scalar = 30.0;
 const R_TRANS_STEP: i32 = 80;
 const RAINBOW_CYCLE: i32 = 100;
+const END_HEIGHT: f64 = 1.3;
 
 pub struct Ball {
     pub pos: [Scalar; 2],
@@ -25,6 +26,7 @@ pub struct Ball {
     pub r_trans_step: i32,
     end: bool,
     color: [f32; 4],
+    collide_count: i32, // Score
     count: i32,
 }
 
@@ -38,6 +40,7 @@ impl Ball {
             r_trans_step: 0,
             end: false,
             color: [1.0, 0.0, 0.0, 1.0],
+            collide_count: 0,
             count: 0,
         }
     }
@@ -79,13 +82,15 @@ impl Ball {
             self.pos[0] = con.width as Scalar - self.r;
             self.vec[0] = - num::abs(self.vec[0]) as Scalar;
         }
-        if self.pos[1] + self.r > con.height as Scalar {
+        if self.pos[1] + self.r > con.height as Scalar * END_HEIGHT {
             self.end = true;
         }
+        // check collide with bar
         if self.pos[0] + self.r + self.r / 2.5 > bar.pos[0] - bar.length / 2.0 &&
            self.pos[0] - self.r - self.r / 2.5 < bar.pos[0] + bar.length / 2.0 {
             if self.pos[1] < bar.pos[1] + player::HEIGHT && self.pos[1] + self.r > bar.pos[1] {
                 if self.pos[1] < bar.pos[1] && self.vec[1] > 0.0 {
+                    self.collide_count += 1;
                     self.pos[1] = bar.pos[1] - self.r;
                     self.vec[1] = - self.vec[1];
                     self.vec[0] += ((self.pos[0] - bar.pos[0]) / BIAS) - bar.vec[0];

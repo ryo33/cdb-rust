@@ -22,9 +22,12 @@ mod locus_ball;
 mod object;
 mod traits;
 
+const WINDOW_WIDTH: u32 = 800;
+const WINDOW_HEIGHT: u32 = 600;
+
 fn main() {
     let mut game_loop = GameLoopSettings::new()
-        .window_size(640, 480)
+        .window_size(WINDOW_WIDTH, WINDOW_HEIGHT)
         .internal_size(640, 480)
         .color([0.1, 0.13, 0.1, 1.0])
         .title("CrazyDancingBall").get_game();

@@ -6,7 +6,7 @@ use operation::Operation;
 use game::Context;
 
 pub const DEFAULT_LENGTH: Scalar = 150.0;
-pub const LENGTH_RANGE: Scalar = 200.0;
+pub const LENGTH_RANGE: Scalar = 240.0;
 const LENGTH_TRANS_STEP: i32 = 200;
 pub const DEFAULT_Y: Scalar = 0.95;
 const MAX_Y: Scalar = 0.95;

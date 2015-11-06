@@ -1,5 +1,4 @@
-use graphics::Transformed;
-use graphics::math::{ Scalar, Matrix2d };
+use graphics::math::{ Matrix2d };
 use gfx_graphics::{ GfxGraphics };
 use gfx_device_gl::{ Resources, CommandBuffer, Output };
 
@@ -47,7 +46,8 @@ impl GameState {
                 self.game.update(&self.input_state);
                 if self.game.is_ended() {
                     self.game = self.game.initialize();
-                    self.state = State::Result;
+                    self.state = State::Title;
+                    // TODO self.state = State::Result;
                 }
             },
             State::Result => {
