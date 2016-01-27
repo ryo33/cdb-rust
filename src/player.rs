@@ -1,6 +1,5 @@
 use graphics::math::{ Scalar, Matrix2d };
-use gfx_graphics::{ GfxGraphics };
-use gfx_device_gl::{ Resources, CommandBuffer, Output };
+use piston_window::{ G2d };
 
 use operation::Operation;
 use game::Context;
@@ -83,7 +82,7 @@ impl Player {
         }
     }
 
-    pub fn draw(&self, t: Matrix2d, g: &mut GfxGraphics<Resources, CommandBuffer<Resources>, Output>) {
+    pub fn draw(&self, t: Matrix2d, g: &mut G2d) {
         use figure;
         figure::rect(self.pos[0] - self.length / 2.0, self.pos[1], self.length, HEIGHT, COLOR, t, g);
     }

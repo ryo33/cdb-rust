@@ -1,6 +1,5 @@
 use graphics::math::{ Scalar, Matrix2d };
-use gfx_graphics::{ GfxGraphics };
-use gfx_device_gl::{ Resources, CommandBuffer, Output };
+use piston_window::{ G2d };
 use rand::{ self, Rng };
 
 use player;
@@ -31,7 +30,7 @@ impl Object {
         }
     }
 
-    pub fn draw(&self, t: Matrix2d, g: &mut GfxGraphics<Resources, CommandBuffer<Resources>, Output>) {
+    pub fn draw(&self, t: Matrix2d, g: &mut G2d) {
         use figure;
         let mut color = self.color();
         color[3] -= OPACITY * 1.0 / DISAPPEAR_COUNT as f32 * self.dc as f32;

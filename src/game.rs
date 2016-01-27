@@ -1,9 +1,8 @@
 use std::vec::Vec;
 use graphics::Transformed;
 use graphics::math::{ Scalar, Matrix2d };
-use gfx_graphics::{ GfxGraphics };
-use gfx_device_gl::{ Resources, CommandBuffer, Output };
 use rand::{ self, Rng };
+use piston_window::{ G2d };
 
 use input_state::InputState;
 use player::{ self, Player };
@@ -43,7 +42,7 @@ impl Game {
         Self::new(self.context.width, self.context.height)
     }
 
-    pub fn draw(&self, t: Matrix2d, g: &mut GfxGraphics<Resources, CommandBuffer<Resources>, Output>) {
+    pub fn draw(&self, t: Matrix2d, g: &mut G2d) {
         self.bar.draw(t, g);
         for o in self.objects.iter() {
             o.draw(t, g);

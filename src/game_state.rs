@@ -1,6 +1,5 @@
 use graphics::math::{ Matrix2d };
-use gfx_graphics::{ GfxGraphics };
-use gfx_device_gl::{ Resources, CommandBuffer, Output };
+use piston_window::{ G2d };
 
 use operation::*;
 use input_state::InputState;
@@ -30,7 +29,7 @@ impl GameState {
         }
     }
 
-    pub fn draw(&self, t: Matrix2d, g: &mut GfxGraphics<Resources, CommandBuffer<Resources>, Output>) {
+    pub fn draw(&self, t: Matrix2d, g: &mut G2d) {
         match self.state {
             State::Title => {
             },

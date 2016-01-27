@@ -1,10 +1,9 @@
 use graphics::math::{ Scalar, Matrix2d };
-use gfx_graphics::{ GfxGraphics };
-use gfx_device_gl::{ Resources, CommandBuffer, Output };
+use piston_window::{ G2d };
 use num;
 use player;
-use locus_ball::LocusBall;
 
+use locus_ball::LocusBall;
 use game::Context;
 use traits::Circle;
 
@@ -112,7 +111,7 @@ impl Ball {
         self
     }
 
-    pub fn draw(&self, t: Matrix2d, g: &mut GfxGraphics<Resources, CommandBuffer<Resources>, Output>) {
+    pub fn draw(&self, t: Matrix2d, g: &mut G2d) {
         use figure;
         figure::circle(self.pos[0], self.pos[1], self.r, self.color, t, g);
     }

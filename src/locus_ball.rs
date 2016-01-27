@@ -1,6 +1,5 @@
 use graphics::math::{ Scalar, Matrix2d };
-use gfx_graphics::{ GfxGraphics };
-use gfx_device_gl::{ Resources, CommandBuffer, Output };
+use piston_window::{ G2d };
 
 const REMAIN_TIME: i32 = 330;
 const MAX_OPACITY: f32 = 0.3;
@@ -31,7 +30,7 @@ impl LocusBall {
         self.count > 0
     }
 
-    pub fn draw(&self, t: Matrix2d, g: &mut GfxGraphics<Resources, CommandBuffer<Resources>, Output>) {
+    pub fn draw(&self, t: Matrix2d, g: &mut G2d) {
         use figure;
         let mut color = self.color;
         color[3] = MAX_OPACITY * self.count as f32 / REMAIN_TIME as f32;
