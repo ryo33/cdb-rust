@@ -8,7 +8,7 @@ use game::Context;
 use traits::Circle;
 
 pub const DEFAULT_VEC: [Scalar; 2] = [2.4, 2.4];
-pub const VEC_RANGE: Scalar = 1.0;
+pub const VEC_RANGE: Scalar = 1.8;
 pub const DEFAULT_R: Scalar = 28.0;
 pub const R_RANGE: Scalar = 40.0;
 const DEFAULT_Y: Scalar = 0.05;
