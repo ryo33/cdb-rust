@@ -55,10 +55,12 @@ impl Player {
 
         if self.pos[1] < con.height as f64 * MIN_Y {
             self.pos[1] = con.height as f64 * MIN_Y;
+            self.vec[1] = 0.;
         }
 
         if self.pos[1] > con.height as f64 * MAX_Y {
             self.pos[1] = con.height as f64 * MAX_Y;
+            self.vec[1] = 0.;
         }
         self
     }
