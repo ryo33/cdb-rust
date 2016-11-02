@@ -2,8 +2,8 @@ use graphics::math::{ Scalar, Matrix2d };
 use piston_window::{ G2d };
 use rand::{ self, Rng };
 
-use player;
-use ball;
+use state::player;
+use state::ball;
 use traits::Circle;
 
 const OPACITY: f32 = 0.6;
@@ -11,6 +11,7 @@ const DISAPPEAR_COUNT: i32 = 50;
 pub const MAX_R: f64 = 50.0;
 pub const MIN_R: f64 = 10.0;
 
+#[derive(Clone)]
 pub struct Object {
     pub pos: [Scalar; 2],
     pub r: Scalar,
@@ -125,6 +126,7 @@ impl Circle for Object {
     }
 }
 
+#[derive(Clone)]
 pub enum Sort {
     Fall,
     Random,

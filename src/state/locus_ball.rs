@@ -4,6 +4,7 @@ use piston_window::{ G2d };
 const REMAIN_TIME: i32 = 330;
 const MAX_OPACITY: f32 = 0.3;
 
+#[derive(Clone)]
 pub struct LocusBall {
     pos: [Scalar; 2],
     r: Scalar,

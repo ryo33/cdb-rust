@@ -1,10 +1,9 @@
 use graphics::math::{ Scalar, Matrix2d };
-use piston_window::{ G2d };
+use piston_window::{ G2d, Size };
 use num;
-use player;
 
-use locus_ball::LocusBall;
-use game::Context;
+use state::player;
+use state::locus_ball::LocusBall;
 use traits::Circle;
 
 pub const DEFAULT_VEC: [Scalar; 2] = [2.4, 2.4];
@@ -17,6 +16,7 @@ const R_TRANS_STEP: i32 = 80;
 const RAINBOW_CYCLE: i32 = 100;
 const END_HEIGHT: f64 = 1.3;
 
+#[derive(Clone)]
 pub struct Ball {
     pub pos: [Scalar; 2],
     pub vec: [Scalar; 2],
@@ -30,9 +30,9 @@ pub struct Ball {
 }
 
 impl Ball {
-    pub fn new(con: Context) -> Self {
+    pub fn new(width: u32, height: u32) -> Self {
         Ball {
-            pos: [con.width as Scalar / 2.0, con.height as Scalar * DEFAULT_Y],
+            pos: [width as Scalar / 2.0, height as Scalar * DEFAULT_Y],
             vec: DEFAULT_VEC,
             r: DEFAULT_R,
             r_trans: 0.0,
@@ -64,7 +64,7 @@ impl Ball {
         self.r_trans = trans;
     }
 
-    pub fn update(&mut self, con: &Context, bar: &player::Player) -> &mut Self {
+    pub fn update(&mut self, width: u32, height: u32, bar: &player::Player) -> &mut Self {
         self.count += 1;
         self.transform();
 
@@ -77,11 +77,11 @@ impl Ball {
             self.pos[1] = self.r;
             self.vec[1] = num::abs(self.vec[1]) as Scalar;
         }
-        if self.pos[0] + self.r > con.width as Scalar {
-            self.pos[0] = con.width as Scalar - self.r;
+        if self.pos[0] + self.r > width as Scalar {
+            self.pos[0] = width as Scalar - self.r;
             self.vec[0] = - num::abs(self.vec[0]) as Scalar;
         }
-        if self.pos[1] + self.r > con.height as Scalar * END_HEIGHT {
+        if self.pos[1] + self.r > height as Scalar * END_HEIGHT {
             self.end = true;
         }
         // check collide with bar

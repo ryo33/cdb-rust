@@ -1,8 +1,7 @@
 use graphics::math::{ Scalar, Matrix2d };
-use piston_window::{ G2d };
+use piston_window::{ G2d, Size };
 
-use operation::Operation;
-use game::Context;
+use action::*;
 
 pub const DEFAULT_LENGTH: Scalar = 150.0;
 pub const LENGTH_RANGE: Scalar = 240.0;
@@ -15,6 +14,7 @@ const FRICTION: Scalar = 0.95;
 pub const HEIGHT: Scalar = 10.0;
 const COLOR: [f32; 4] = [0.8, 0.8, 0.9, 0.8];
 
+#[derive(Clone)]
 pub struct Player {
     pub pos: [Scalar; 2],
     pub vec: [Scalar; 2],
@@ -24,9 +24,9 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn new(con: Context) -> Self {
+    pub fn new(width: u32, height: u32) -> Self {
         Player {
-            pos: [(con.width / 2) as Scalar, con.height as f64 * DEFAULT_Y],
+            pos: [(width / 2) as Scalar, height as f64 * DEFAULT_Y],
             vec: [0.0, 0.0],
             length: DEFAULT_LENGTH,
             length_trans: 0.0,
@@ -46,38 +46,37 @@ impl Player {
         self.length_trans = trans;
     }
 
-    pub fn update(&mut self, con: &Context) -> &mut Self {
+    pub fn update(&mut self, width: u32, height: u32) -> &mut Self {
         self.transform();
         self.pos = [self.pos[0] + self.vec[0], self.pos[1] + self.vec[1]];
         for v in &mut self.vec {
             *v = *v * FRICTION;
         }
 
-        if self.pos[1] < con.height as f64 * MIN_Y {
-            self.pos[1] = con.height as f64 * MIN_Y;
+        if self.pos[1] < height as f64 * MIN_Y {
+            self.pos[1] = height as f64 * MIN_Y;
             self.vec[1] = 0.;
         }
 
-        if self.pos[1] > con.height as f64 * MAX_Y {
-            self.pos[1] = con.height as f64 * MAX_Y;
+        if self.pos[1] > height as f64 * MAX_Y {
+            self.pos[1] = height as f64 * MAX_Y;
             self.vec[1] = 0.;
         }
         self
     }
 
-    pub fn press(&mut self, op: &Operation) {
-        use operation::{ Operation, Direction, };
+    pub fn input(&mut self, op: Operation) {
         match op {
-            &Operation::Move(Direction::Left) => {
+            Operation::Left => {
                 self.vec = [self.vec[0] - MOVE, self.vec[1]];
             },
-            &Operation::Move(Direction::Right) => {
+            Operation::Right => {
                 self.vec = [self.vec[0] + MOVE, self.vec[1]];
             },
-            &Operation::Move(Direction::Up) => {
+            Operation::Up => {
                 self.vec = [self.vec[0], self.vec[1] - MOVE];
             },
-            &Operation::Move(Direction::Down) => {
+            Operation::Down => {
                 self.vec = [self.vec[0], self.vec[1] + MOVE];
             },
             _ => {},

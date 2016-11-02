@@ -8,6 +8,7 @@ name = "cdb"
 path = "src/main.rs"
 
 [dependencies]
+crux = { git = "https://github.com/ryo33/crux" }
 piston = "*"
 piston_window = "*"
 piston2d-sprite = "*"

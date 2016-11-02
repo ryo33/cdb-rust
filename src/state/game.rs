@@ -2,13 +2,14 @@ use std::vec::Vec;
 use graphics::Transformed;
 use graphics::math::{ Scalar, Matrix2d };
 use rand::{ self, Rng };
-use piston_window::{ G2d };
+use piston_window::{ G2d, Size };
 
-use input_state::InputState;
-use player::{ self, Player };
-use ball::{ self, Ball };
-use object::{ self, Object, Sort };
-use locus_ball::LocusBall;
+use action::*;
+use state::input_state::InputState;
+use state::player::{ self, Player };
+use state::ball::{ self, Ball };
+use state::object::{ self, Object, Sort };
+use state::locus_ball::LocusBall;
 use traits::Circle;
 
 const OBJECT_FREQUECY: i32 = 80;
@@ -16,8 +17,10 @@ const LOCUS_FREQUENCY: i32 = 3;
 const MIN_DISTANCE: f64 = 150.0; // Minimal distance of ball and spawn position of object
 const OBJECT_RANDOM_LIMIT: i32 = 100;
 
+#[derive(Clone)]
 pub struct Game {
-    context: Context,
+    width: u32,
+    height: u32,
     bar: Player,
     ball: Ball,
     loci: Vec<LocusBall>,
@@ -27,11 +30,11 @@ pub struct Game {
 
 impl Game {
     pub fn new(width: u32, height: u32) -> Self {
-        let mut con = Context::new(width, height);
         Game {
-            context: con.clone(),
-            bar: Player::new(con.clone()),
-            ball: Ball::new(con.clone()),
+            width: width,
+            height: height,
+            bar: Player::new(width, height),
+            ball: Ball::new(width, height),
             loci: Vec::new(),
             objects: Vec::new(),
             count: 0,
@@ -39,7 +42,7 @@ impl Game {
     }
 
     pub fn initialize(&self) -> Self {
-        Self::new(self.context.width, self.context.height)
+        Self::new(self.width, self.height)
     }
 
     pub fn draw(&self, t: Matrix2d, g: &mut G2d) {
@@ -53,12 +56,12 @@ impl Game {
         self.ball.draw(t, g);
     }
 
-    pub fn update(&mut self, input_state: &InputState) {
-        self.count += 1;
+    pub fn input(&mut self, ope: Operation) {
+        self.bar.input(ope);
+    }
 
-        for op in input_state.vec().iter() {
-            self.bar.press(op);
-        }
+    pub fn update(&mut self) {
+        self.count += 1;
 
         for o in self.objects.iter_mut() {
             if ! o.hit && o.is_hit(&self.ball) {
@@ -73,8 +76,8 @@ impl Game {
         }
         self.loci.retain(|l| l.is_retained());
 
-        self.bar.update(&self.context);
-        self.ball.update(&self.context, &self.bar);
+        self.bar.update(self.width, self.height);
+        self.ball.update(self.width, self.height, &self.bar);
 
         // Add objects
         let mut rng = rand::thread_rng();
@@ -94,7 +97,7 @@ impl Game {
             };
             let r = rng.gen_range(object::MIN_R, object::MAX_R);
             for i in 0..OBJECT_RANDOM_LIMIT {
-                let pos = [rng.gen_range(0.0, self.context.width as Scalar) as f64, rng.gen_range(0.0, self.context.height as Scalar * player::DEFAULT_Y - ball::DEFAULT_R)];
+                let pos = [rng.gen_range(0.0, self.width as Scalar) as f64, rng.gen_range(0.0, self.height as Scalar * player::DEFAULT_Y - ball::DEFAULT_R)];
                 if ! self.ball.is_hit(&(pos, r + MIN_DISTANCE)) {
                     self.objects.push(Object::new(pos, r, sort));
                     break;
@@ -124,24 +127,5 @@ impl Circle for ([f64; 2], f64) {
 
     fn get_r(&self) -> f64 {
         self.1
-    }
-}
-
-#[derive(Clone)]
-pub struct Context {
-    pub width: u32,
-    pub height: u32,
-}
-
-impl Context {
-    pub fn new(width: u32, height: u32) -> Context {
-        Context {
-            width: width,
-            height: height,
-        }
-    }
-
-    pub fn trans(&self, t: Matrix2d) -> Matrix2d {
-        t.trans((self.width / 2) as Scalar, (self.height / 2) as Scalar)
     }
 }

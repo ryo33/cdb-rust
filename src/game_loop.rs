@@ -1,8 +1,10 @@
 use piston_window::*;
+use graphics::math::{ Matrix2d, Scalar };
 use find_folder;
+use crux::Store;
 
-use operation::InputManager;
-use game_state::GameState;
+use state::GameState;
+use action::*;
 
 const TITLE_WIDTH: u32 = 800;
 const TITLE_HEIGHT: u32 = 600;
@@ -33,7 +35,7 @@ impl GameLoop {
         }
     }
 
-    pub fn run(&mut self, input_manager: &InputManager) {
+    pub fn run(&mut self) {
         let title = Texture::from_path(
             &mut *self.window.factory.borrow_mut(),
             &find_folder::Search::ParentsThenKids(3, 3)
@@ -42,6 +44,7 @@ impl GameLoop {
             &TextureSettings::new()
             ).unwrap();
         let mut game_state = GameState::new(self.width, self.height);
+        let mut store = Store::new(game_state);
         for e in self.window.clone() {
             e.draw_2d(|c, g| {
                 use figure;
@@ -58,20 +61,20 @@ impl GameLoop {
                 }
                 let t = con.transform;
                 figure::rect(0.0, 0.0, self.width as f64, self.height as f64, self.color, t, g);
-                if game_state.is_title() {
+                if store.state().is_title() {
                     image(&title, t.scale(self.width as f64 / TITLE_WIDTH as f64, self.height as f64 / TITLE_HEIGHT as f64), g);
                 } else {
-                    game_state.draw(t, g);
+                    store.state().draw(t, g);
                 }
             });
             e.update(|_args| {
-                game_state.update();
+                store.dispatch(GameAction::Update);
             });
             e.press(|button| {
-                game_state.press(input_manager.get_operation(button));
+                store.dispatch(GameAction::Press(button));
             });
             e.release(|button| {
-                game_state.release(input_manager.get_operation(button));
+                store.dispatch(GameAction::Release(button));
             });
         }
     }
